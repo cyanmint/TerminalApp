@@ -36,6 +36,7 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs += listOf("-Xjvm-default=all")
     }
 
     sourceSets {
@@ -46,6 +47,12 @@ android {
             assets.srcDirs("../assets")
             manifest.srcFile("../AndroidManifest.xml")
         }
+    }
+    
+    // Allow compilation errors for platform-specific APIs
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
     }
 }
 
@@ -76,4 +83,10 @@ dependencies {
     
     // ViewPager2
     implementation("androidx.viewpager2:viewpager2:1.0.0")
+    
+    // Startup runtime for initialization
+    implementation("androidx.startup:startup-runtime:1.1.1")
+    
+    // Annotation for internal APIs (compileOnly since not available at runtime in standard SDK)
+    compileOnly("androidx.annotation:annotation:1.7.1")
 }

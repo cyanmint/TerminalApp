@@ -37,3 +37,9 @@ out/
 
 # Android Profiling
 *.hprof
+
+# Platform API stubs for Gradle build (not needed for AOSP build)
+app/src/main/java/android/
+app/src/main/java/com/android/internal/
+app/src/main/java/com/android/microdroid/
+app/src/main/java/com/android/system/
