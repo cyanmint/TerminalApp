@@ -18,6 +18,11 @@ jobs:
         with:
           submodules: 'recursive'
       
+      - name: Apply avf-stubs build override
+        run: |
+          cp stubs-override/avf-stubs-build.gradle.kts stubs/avf-stubs/build.gradle.kts
+          echo "Applied simplified build.gradle.kts for avf-stubs"
+      
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:

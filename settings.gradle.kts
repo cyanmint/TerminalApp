@@ -16,4 +16,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "CyanmintTerminalApp"
 include(":app")
-include(":stubs:avf-stubs")
+include(":avf-stubs")
+project(":avf-stubs").projectDir = file("stubs/avf-stubs")

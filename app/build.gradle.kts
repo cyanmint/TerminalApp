@@ -87,9 +87,13 @@ dependencies {
     // Startup runtime for initialization
     implementation("androidx.startup:startup-runtime:1.1.1")
     
-    // Annotation for internal APIs (compileOnly since not available at runtime in standard SDK)
-    compileOnly("androidx.annotation:annotation:1.7.1")
+    // Annotation for internal APIs
+    implementation("androidx.annotation:annotation:1.7.1")
+    
+    // gRPC for compilation (compileOnly since AOSP version is used at runtime)
+    compileOnly("io.grpc:grpc-stub:1.60.0")
+    compileOnly("io.grpc:grpc-okhttp:1.60.0")
     
     // Android AVF Stubs - platform-specific APIs
-    compileOnly(project(":stubs:avf-stubs"))
+    compileOnly(project(":avf-stubs"))
 }

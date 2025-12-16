@@ -161,6 +161,22 @@ git clone --recurse-submodules https://github.com/cyanmint/TerminalApp.git
 git submodule update --init --recursive
 ```
 
+**Note**: The avf-stubs submodule's `build.gradle.kts` is automatically overridden during CI builds using the simplified version in `stubs-override/`. For local builds, you may need to manually copy this file:
+
+```bash
+cp stubs-override/avf-stubs-build.gradle.kts stubs/avf-stubs/build.gradle.kts
+```
+
+### Build Limitations
+
+The Gradle build currently has compilation issues due to missing platform-specific dependencies:
+- gRPC protocol buffer generated code
+- Hidden Context APIs (`userId`, `getPackageUidAsUser`)
+- SystemProperties APIs
+- Debian service protocol definitions
+
+**For production builds**, use the Android.bp build system within an AOSP environment, which provides all necessary platform dependencies.
+
 For full functionality, build using the Android.bp system within an AOSP environment.
 
 ### Platform APIs Used
