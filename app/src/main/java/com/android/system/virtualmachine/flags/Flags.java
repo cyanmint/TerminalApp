@@ -9,4 +9,8 @@ public class Flags {
     public static boolean terminalMemoryBalloon() {
         return false;
     }
+    
+    public static boolean terminalGuiSupport() {
+        return false;
+    }
 }

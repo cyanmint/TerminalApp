@@ -135,7 +135,13 @@ The Gradle build is used for CI/CD pipelines, while Android.bp is for AOSP syste
 
 ## Platform Requirements
 
-**Important**: This application uses Android Virtualization Framework (AVF) platform APIs that are not available in the standard Android SDK. The Gradle build includes stub implementations of these platform-specific classes to allow compilation, but the resulting APK will only work when:
+**Important**: This application uses Android Virtualization Framework (AVF) platform APIs that are not available in the standard Android SDK. 
+
+### Platform API Stubs
+
+The Gradle build uses stub implementations from the [android-avf-stubs](https://github.com/freundTech/android-avf-stubs) project (included as a git submodule) to allow compilation. Additional supplementary stubs are provided in `app/src/main/java/` for APIs not covered by android-avf-stubs.
+
+The resulting APK will only work when:
 
 1. Running on devices with AVF support (Android 13+ on supported hardware)
 2. Built as part of AOSP using Android.bp (for production use)
@@ -144,6 +150,16 @@ The Gradle build system with stub APIs is provided for:
 - CI/CD validation of code structure
 - Development and testing of non-platform-specific features
 - Documentation and code analysis
+
+### Cloning the Repository
+
+When cloning this repository, initialize the submodules:
+
+```bash
+git clone --recurse-submodules https://github.com/cyanmint/TerminalApp.git
+# Or if already cloned:
+git submodule update --init --recursive
+```
 
 For full functionality, build using the Android.bp system within an AOSP environment.
 

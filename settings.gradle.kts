@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "CyanmintTerminalApp"
 include(":app")
+include(":stubs:avf-stubs")

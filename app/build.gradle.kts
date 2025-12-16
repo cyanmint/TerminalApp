@@ -89,4 +89,7 @@ dependencies {
     
     // Annotation for internal APIs (compileOnly since not available at runtime in standard SDK)
     compileOnly("androidx.annotation:annotation:1.7.1")
+    
+    // Android AVF Stubs - platform-specific APIs
+    compileOnly(project(":stubs:avf-stubs"))
 }
