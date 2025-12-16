@@ -75,3 +75,40 @@ jobs:
           echo "- Source files: OK"
           echo "- Package structure: OK"
           echo "- AndroidManifest.xml: OK"
+      
+      - name: Prepare build artifacts
+        run: |
+          echo "Preparing artifacts..."
+          mkdir -p build-artifacts
+          
+          # Copy build configuration files
+          cp Android.bp build-artifacts/
+          cp AndroidManifest.xml build-artifacts/
+          cp proguard.flags build-artifacts/ 2>/dev/null || true
+          
+          # Copy source files
+          cp -r java build-artifacts/
+          cp -r aidl build-artifacts/
+          cp -r res build-artifacts/
+          cp -r assets build-artifacts/ 2>/dev/null || true
+          
+          # Copy documentation
+          cp README.md build-artifacts/ 2>/dev/null || true
+          cp CHANGES.md build-artifacts/ 2>/dev/null || true
+          
+          # Create build info
+          echo "Build Date: $(date)" > build-artifacts/BUILD_INFO.txt
+          echo "Branch: ${{ github.ref_name }}" >> build-artifacts/BUILD_INFO.txt
+          echo "Commit: ${{ github.sha }}" >> build-artifacts/BUILD_INFO.txt
+          echo "Workflow: ${{ github.workflow }}" >> build-artifacts/BUILD_INFO.txt
+          
+          echo "Artifacts prepared in build-artifacts/"
+          ls -lah build-artifacts/
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: CyanmintTerminalApp-${{ github.sha }}
+          path: build-artifacts/
+          retention-days: 30
+          if-no-files-found: error
