@@ -38,6 +38,12 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream
 /**
  * ImageArchive models the archive file (images.tar.gz) where VM payload files are in. This class
  * provides methods for handling the archive file, most importantly installing it.
+ * 
+ * Supports importing filesystem tarballs from:
+ * - URL (downloaded from internet)
+ * - Local filesystem path (e.g., from SD card or internal storage)
+ * 
+ * The tarball should contain VM kernel, initrd, rootfs, and config files.
  */
 internal class ImageArchive {
     // Only one can be non-null
@@ -158,6 +164,28 @@ internal class ImageArchive {
          */
         fun fromSdCard(): ImageArchive {
             return ImageArchive(getSdcardPathForTesting().resolve(ARCHIVE_NAME))
+        }
+
+        /**
+         * Creates ImageArchive from a custom filesystem path.
+         * This allows importing filesystem tarballs from any location.
+         * 
+         * @param path Absolute path to the tarball file (e.g., .tar.gz)
+         * @return ImageArchive instance for the specified path
+         */
+        fun fromPath(path: Path): ImageArchive {
+            return ImageArchive(path)
+        }
+
+        /**
+         * Creates ImageArchive from a custom filesystem path string.
+         * This allows importing filesystem tarballs from any location.
+         * 
+         * @param pathString Absolute path string to the tarball file
+         * @return ImageArchive instance for the specified path
+         */
+        fun fromPath(pathString: String): ImageArchive {
+            return ImageArchive(Path.of(pathString))
         }
 
         /**

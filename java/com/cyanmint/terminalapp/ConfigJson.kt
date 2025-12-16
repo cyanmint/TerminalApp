@@ -42,13 +42,15 @@ import java.nio.file.Path
 
 /** This class and its inner classes model vm_config.json. */
 internal data class ConfigJson(
-    @SerializedName("protected") private val isProtected: Boolean,
+    @SerializedName("protected") private val isProtected: Boolean = false,
     private val name: String?,
     private val cpu_topology: String?,
     private val platform_version: String?,
     private val memory_mib: Int = 1024,
     private val console_input_device: String?,
     private val bootloader: String?,
+    // Kernel path. If null or "microdroid", uses the default Microdroid kernel.
+    // Otherwise, should be an absolute path to a custom kernel image.
     private val kernel: String?,
     private val initrd: String?,
     private val params: String?,
@@ -77,10 +79,25 @@ internal data class ConfigJson(
         else VirtualMachineConfig.DEBUG_LEVEL_NONE
     }
 
-    /** Converts this parsed JSON into VirtualMachineConfig Builder */
+    /**
+     * Get the kernel path to use. Returns null if the default Microdroid kernel should be used.
+     * This happens when kernel is null, empty, or explicitly set to "microdroid".
+     */
+    private fun getKernelPath(): String? {
+        return when {
+            kernel.isNullOrEmpty() -> null
+            kernel.equals("microdroid", ignoreCase = true) -> null
+            else -> kernel
+        }
+    }
+
+    /**
+     * Converts this parsed JSON into VirtualMachineConfig Builder.
+     * Supports both protected and non-protected VMs based on the "protected" field.
+     */
     fun toConfigBuilder(context: Context): VirtualMachineConfig.Builder {
         return VirtualMachineConfig.Builder(context)
-            .setProtectedVm(isProtected)
+            .setProtectedVm(isProtected)  // Support for protected/non-protected VMs
             .setMemoryBytes(memory_mib.toLong() * 1024 * 1024)
             .setConsoleInputDevice(console_input_device)
             .setCpuTopology(getCpuTopology())
@@ -96,7 +113,7 @@ internal data class ConfigJson(
         builder
             .setName(name)
             .setBootloaderPath(bootloader)
-            .setKernelPath(kernel)
+            .setKernelPath(getKernelPath())  // Use helper method for kernel path
             .setInitrdPath(initrd)
             .useNetwork(network)
             .useAutoMemoryBalloon(auto_memory_balloon)
