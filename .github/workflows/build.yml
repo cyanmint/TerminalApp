@@ -68,29 +68,49 @@ jobs:
             exit 1
           fi
       
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      
+      - name: Build APK with Gradle
+        run: |
+          echo "Building APK..."
+          ./gradlew assembleDebug --stacktrace
+          echo "APK built successfully!"
+      
       - name: Build summary
         run: |
-          echo "Build validation completed successfully!"
+          echo "Build completed successfully!"
           echo "- Android.bp syntax: OK"
           echo "- Source files: OK"
           echo "- Package structure: OK"
           echo "- AndroidManifest.xml: OK"
+          echo "- APK Build: OK"
+          
+          # List built APKs
+          echo ""
+          echo "Built APK files:"
+          find app/build/outputs/apk -name "*.apk" -exec ls -lh {} \;
       
       - name: Prepare build artifacts
         run: |
           echo "Preparing artifacts..."
           mkdir -p build-artifacts
           
+          # Copy built APK files
+          if [ -d "app/build/outputs/apk" ]; then
+            cp -r app/build/outputs/apk build-artifacts/
+            echo "APK files copied"
+          fi
+          
           # Copy build configuration files
           cp Android.bp build-artifacts/
           cp AndroidManifest.xml build-artifacts/
           cp proguard.flags build-artifacts/ 2>/dev/null || true
           
-          # Copy source files
-          cp -r java build-artifacts/
-          cp -r aidl build-artifacts/
-          cp -r res build-artifacts/
-          cp -r assets build-artifacts/ 2>/dev/null || true
+          # Copy Gradle build files
+          cp settings.gradle.kts build-artifacts/ 2>/dev/null || true
+          cp build.gradle.kts build-artifacts/ 2>/dev/null || true
+          cp -r app/build.gradle.kts build-artifacts/app-build.gradle.kts 2>/dev/null || true
           
           # Copy documentation
           cp README.md build-artifacts/ 2>/dev/null || true
@@ -101,6 +121,13 @@ jobs:
           echo "Branch: ${{ github.ref_name }}" >> build-artifacts/BUILD_INFO.txt
           echo "Commit: ${{ github.sha }}" >> build-artifacts/BUILD_INFO.txt
           echo "Workflow: ${{ github.workflow }}" >> build-artifacts/BUILD_INFO.txt
+          
+          # List APK files in build info
+          if [ -d "app/build/outputs/apk" ]; then
+            echo "" >> build-artifacts/BUILD_INFO.txt
+            echo "Built APK files:" >> build-artifacts/BUILD_INFO.txt
+            find app/build/outputs/apk -name "*.apk" -exec basename {} \; >> build-artifacts/BUILD_INFO.txt
+          fi
           
           echo "Artifacts prepared in build-artifacts/"
           ls -lah build-artifacts/
