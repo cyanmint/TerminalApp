@@ -3,7 +3,7 @@ package {
 }
 
 android_app {
-    name: "VmTerminalApp",
+    name: "CyanmintTerminalApp",
     srcs: [
         "java/**/*.java",
         "java/**/*.kt",
@@ -24,7 +24,7 @@ android_app {
         "gson",
         // TODO(b/331708504): will be removed when AVF framework handles surface
         "libcrosvm_android_display_service-java",
-        "VmTerminalApp.aidl-java",
+        "CyanmintTerminalApp.aidl-java",
         "MicrodroidTestHelper", // for DeviceProperties class
     ],
     jni_libs: [
@@ -51,7 +51,7 @@ android_app {
 }
 
 aidl_interface {
-    name: "VmTerminalApp.aidl",
+    name: "CyanmintTerminalApp.aidl",
     srcs: ["aidl/**/*.aidl"],
     unstable: true,
     local_include_dir: "aidl",
