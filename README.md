@@ -100,3 +100,35 @@ The VM is configured via `vm_config.json` file which supports:
 Copyright 2024 The Android Open Source Project
 
 Licensed under the Apache License, Version 2.0. See LICENSE file for details.
+
+## Building
+
+This project supports two build systems:
+
+### Gradle Build (for CI and standalone building)
+
+The project includes Gradle build configuration for easy APK building:
+
+```bash
+# Build debug APK
+./gradlew assembleDebug
+
+# Build release APK
+./gradlew assembleRelease
+
+# Clean build
+./gradlew clean
+```
+
+Built APK files will be in `app/build/outputs/apk/`.
+
+### Android.bp Build (for AOSP integration)
+
+For building as part of the Android Open Source Project:
+
+```bash
+# Requires AOSP environment
+m CyanmintTerminalApp
+```
+
+The Gradle build is used for CI/CD pipelines, while Android.bp is for AOSP system builds.
